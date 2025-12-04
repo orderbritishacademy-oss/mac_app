@@ -1,0 +1,31 @@
+name: Build Mac App
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install Python
+      run: brew install python3
+
+    - name: Install dependencies
+      run: pip3 install pyinstaller firebase-admin reportlab
+
+    - name: Build Mac App
+      run: |
+        pyinstaller --windowed --name "KidzibooksInventory" part2.py
+        ls dist
+
+    - name: Upload built app
+      uses: actions/upload-artifact@v4
+      with:
+        name: KidzibooksInventory-Mac
+        path: dist/
